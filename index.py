@@ -1,14 +1,14 @@
 
 #region---加载模块-----------------------------------------------
-from sklearn.ensemble import RandomForestClassifier  # 随机森林模块
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-from sklearn.model_selection import ShuffleSplit
+#   from sklearn.ensemble import RandomForestClassifier  # 随机森林模块
+#   from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+#   from sklearn.model_selection import ShuffleSplit
 import joblib  # 封装和调用模型
 import numpy as np
 import pandas as pd
-from sklearn.tree import export_graphviz
+#   from sklearn.tree import export_graphviz
 #   import graphviz
-import matplotlib.pyplot as plt
+#   import matplotlib.pyplot as plt
 #   import random
 import streamlit as st
 

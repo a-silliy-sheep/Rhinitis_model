@@ -3,12 +3,13 @@
 from sklearn.ensemble import RandomForestClassifier  # 随机森林模块
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from sklearn.model_selection import ShuffleSplit
+import joblib  # 封装和调用模型
 import numpy as np
 import pandas as pd
 from sklearn.tree import export_graphviz
-import graphviz
+#   import graphviz
 import matplotlib.pyplot as plt
-import random
+#   import random
 import streamlit as st
 
     # 设置数据框输出对齐：
@@ -36,18 +37,19 @@ def get_compositionDf(df):  # 查看分类变量的构成比
 
 #region ---------加载数据--------------------------
 
-df_train = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=0)
-df_validation = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=1)
-df_test = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=2)
-
-df_Train = pd.concat([df_train, df_validation], axis=0, join='inner')
+#       df_train = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=0)
+#       df_validation = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=1)
+#       df_test = pd.read_excel("D:\编程\python\模型部署\Rhinitis\元数据\dat_forPython.xlsx", sheet_name=2)
+#       
+#       df_Train = pd.concat([df_train, df_validation], axis=0, join='inner')
 
 
 # endregion
 
 
 # region----模型训练和评估----------------------------------------
-clf = RandomForestClassifier(n_estimators=100, random_state=2024)
+#       clf = RandomForestClassifier(n_estimators=100, random_state=2024)
+
 
 #     # 创建ShuffleSplit对象，用于执行自动洗牌
 #     ss = ShuffleSplit(n_splits=1, train_size=0.7, test_size=0.3, random_state=0)
@@ -55,12 +57,15 @@ clf = RandomForestClassifier(n_estimators=100, random_state=2024)
 # 循环遍历每个拆分，并使用随机森林分类器对每个拆分进行训练和评估
 #       sub_ind = random.sample(list(range(df_Train.shape[0])), 2000)  # 无放回采样
 
-X_train, X_test = df_Train.iloc[:, 1:6], df_test.iloc[:, 1:6]
-y_train, y_test = df_Train.iloc[:, 0], df_test.iloc[:, 0]
-clf.fit(X_train, y_train)
-y_pred = clf.predict(X_test)
-y_pred2 = (clf.predict_proba(X_test)[:, 1] > 0.24).astype(int)
+#       X_train, X_test = df_Train.iloc[:, 1:6], df_test.iloc[:, 1:6]
+#       y_train, y_test = df_Train.iloc[:, 0], df_test.iloc[:, 0]
+#       clf.fit(X_train, y_train)
+#       y_pred = clf.predict(X_test)
+#       y_pred2 = (clf.predict_proba(X_test)[:, 1] > 0.24).astype(int)
+#       
+#       joblib.dump(clf, 'RF.pkl')
 
+clf = joblib.load('RF.pkl')
 
 #       print("\033[1;34mConfusion Matrix:\n\033[1;0m", pd.DataFrame(data=confusion_matrix(y_test, y_pred2),
 #                   index=pd.Series(['0', '1'], name='Gold'),
@@ -107,6 +112,8 @@ st.title('A simple tool to predict :blue[allergic rhinitis] among 2-8 year old p
 #           st.write('计数器', st.session_state.count)
 # endregion------
 
+df_columns = ['event', 'mom_with_AR', 'dad_with_AR', 'haveOlderSblings', 'child with AD', 'dadEducation']
+
 question_col = ['Has mother ever suffered from allergic rhinitis?',
                 'Has father ever suffered from allergic rhinitis?',
                 'Does the child have older brothers and sisters?',
@@ -122,7 +129,7 @@ X_testStream = X_testStream + [(1 if ('high' in  last_q) else 2 if ('Bachelor' i
 
 
 X_testStreamDf = pd.DataFrame(data=np.array([X_testStream]),
-                                columns=pd.Series(X_train.columns, name='columns'))
+                                columns=pd.Series(df_columns[1:6], name='columns'))
 
 st.empty()
 st.write('Data maping: \n', X_testStreamDf)

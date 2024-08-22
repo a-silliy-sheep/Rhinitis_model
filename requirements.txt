@@ -1,1 +1,5 @@
-sklearn.ensemble, sklearn.metrics, sklearn.model_selection, numpy, pandas, klearn.tree import export_graphviz, graphviz, matplotlib.pyplot, random, streamlit
+streamlit == 1.32.0
+scikit-learn == 1.3.0
+numpy == 1.24.3
+pandas == 2.0.3
+
